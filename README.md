@@ -1,5 +1,7 @@
 # clippy-reborn-backend
 
+> **Note:** This project was built as a test of vibe coding using Claude Code — the whole thing was written with AI assistance, with minimal manual code changes.
+
 Spring Boot backend for the Clippy desktop assistant. Receives chat messages from the Electron frontend, enriches them with today's Google Calendar events, and uses a locally running Ollama LLM to generate responses.
 
 ## Prerequisites
