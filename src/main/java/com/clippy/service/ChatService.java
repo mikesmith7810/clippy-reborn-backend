@@ -59,8 +59,10 @@ public class ChatService {
     public String extractChannelName(String userMessage) {
         String template = """
                 Extract the Slack channel name from the following message.
-                Respond with only the channel name, without the # symbol (e.g. "general", "engineering").
-                If no specific channel is mentioned, respond with "NONE".
+                A channel name is a specific channel within Slack, like "general" or "engineering". It is often preceded by a # symbol.
+                The word "slack" on its own is not a channel name.
+                If no specific channel name is mentioned, respond with "NONE".
+                Respond with only the channel name, without the # symbol.
 
                 Message: {userMessage}
                 """;
