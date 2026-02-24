@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-`clippy-backend` is the Spring Boot backend for the Clippy desktop assistant. It receives chat messages from the Electron frontend, fetches context from Google Calendar, and uses a locally running Ollama LLM to generate natural language responses.
+`clippy-reborn-backend` is the Spring Boot backend for the Clippy desktop assistant. It receives chat messages from the Electron frontend, fetches context from Google Calendar, and uses a locally running Ollama LLM to generate natural language responses.
 
 ## API contract with the frontend
 
