@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Tokens (OAuth refresh token — never commit)
+tokens/
+
+# Google credentials (never commit)
+src/main/resources/credentials.json
+
+# OS
+.DS_Store
