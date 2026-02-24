@@ -1,7 +1,6 @@
 package com.clippy.controller;
 
-import com.clippy.service.CalendarService;
-import com.clippy.service.ChatService;
+import com.clippy.service.ChatMessageRouter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -10,19 +9,15 @@ import java.util.Map;
 @RequestMapping("/api")
 public class ChatController {
 
-    private final ChatService chatService;
-    private final CalendarService calendarService;
+    private final ChatMessageRouter router;
 
-    public ChatController(ChatService chatService, CalendarService calendarService) {
-        this.chatService = chatService;
-        this.calendarService = calendarService;
+    public ChatController(ChatMessageRouter router) {
+        this.router = router;
     }
 
     @PostMapping("/chat")
     public Map<String, String> chat(@RequestBody Map<String, String> body) {
-        String message = body.get("message");
-        String calendarContext = calendarService.getTodaysEvents();
-        String reply = chatService.chat(message, calendarContext);
+        String reply = router.route(body.get("message"));
         return Map.of("reply", reply);
     }
 }

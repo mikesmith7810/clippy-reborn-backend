@@ -1,5 +1,6 @@
 package com.clippy.service;
 
+import com.clippy.model.DateRange;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStreamReader;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +43,7 @@ public class CalendarService {
     @Value("${google.calendar.user}")
     private String user;
 
-    public String getTodaysEvents() {
+    public String getEvents(DateRange dateRange) {
         try {
             NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
             GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
@@ -62,14 +62,11 @@ public class CalendarService {
                     .setApplicationName("Clippy")
                     .build();
 
-            ZonedDateTime startOfDay = ZonedDateTime.now(ZoneId.systemDefault()).toLocalDate()
-                    .atStartOfDay(ZoneId.systemDefault());
-            ZonedDateTime endOfDay = startOfDay.plusDays(1);
-
-            com.google.api.client.util.DateTime timeMin =
-                    new com.google.api.client.util.DateTime(Date.from(startOfDay.toInstant()));
-            com.google.api.client.util.DateTime timeMax =
-                    new com.google.api.client.util.DateTime(Date.from(endOfDay.toInstant()));
+            ZoneId zone = ZoneId.systemDefault();
+            com.google.api.client.util.DateTime timeMin = new com.google.api.client.util.DateTime(
+                    Date.from(dateRange.start().atStartOfDay(zone).toInstant()));
+            com.google.api.client.util.DateTime timeMax = new com.google.api.client.util.DateTime(
+                    Date.from(dateRange.end().plusDays(1).atStartOfDay(zone).toInstant()));
 
             Events events = service.events().list("primary")
                     .setTimeMin(timeMin)
@@ -80,7 +77,7 @@ public class CalendarService {
 
             List<Event> items = events.getItems();
             if (items == null || items.isEmpty()) {
-                return "No events scheduled for today.";
+                return "No events found for the requested period.";
             }
 
             return items.stream()
