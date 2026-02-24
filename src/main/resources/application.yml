@@ -13,3 +13,8 @@ google:
     credentials-file: classpath:credentials.json
     tokens-dir: ./tokens
     user: mike
+
+slack:
+  bot-token: placeholder
+  message-limit: 20
+  channel-ids: {}

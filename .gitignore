@@ -15,5 +15,8 @@ tokens/
 # Google credentials (never commit)
 src/main/resources/credentials.json
 
+# Local secrets override (never commit)
+src/main/resources/application-local.yml
+
 # OS
 .DS_Store

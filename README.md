@@ -56,10 +56,44 @@ mv ~/Downloads/client_secret_*.json \
   src/main/resources/credentials.json
 ```
 
-### 3. Run the app
+### 3. Slack credentials
+
+The app can read recent messages from Slack channels to answer questions like "what's been going on in #general?".
+
+> **Note:** `application-local.yml` contains your bot token and must never be committed. It is already listed in `.gitignore`.
+
+#### Create a Slack app and get a bot token
+
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → **From scratch**
+2. Give it a name (e.g. `Clippy`) and select your workspace
+3. In the left sidebar go to **OAuth & Permissions**
+4. Under **Bot Token Scopes** add:
+   - `channels:read`
+   - `channels:history`
+5. Scroll up and click **Install to Workspace** → **Allow**
+6. Copy the **Bot OAuth Token** (starts with `xoxb-`)
+
+#### Store the token locally
+
+Create `src/main/resources/application-local.yml` (gitignored) with your token:
+
+```yaml
+slack:
+  bot-token: xoxb-your-token-here
+```
+
+Then invite the bot to any channels you want to query in Slack:
+
+```
+/invite @your-app-name
+```
+
+You can then ask Clippy about any channel by name — e.g. "what's going on in #general?"
+
+### 4. Run the app
 
 ```bash
-./gradlew bootRun
+./gradlew bootRun --args='--spring.profiles.active=local'
 ```
 
 On first run a browser window will open asking you to approve Google Calendar access. After approval a refresh token is saved to `./tokens/` and reused on all future runs — you won't be prompted again.
@@ -89,3 +123,5 @@ All config lives in `src/main/resources/application.yml`. Key settings:
 | `spring.ai.ollama.base-url` | `http://localhost:11434` | Ollama server URL |
 | `google.calendar.tokens-dir` | `./tokens` | Where the OAuth refresh token is stored |
 | `google.calendar.user` | `mike` | Identifier for the stored token |
+| `slack.bot-token` | — | Bot token from Slack — set in `application-local.yml` |
+| `slack.message-limit` | `20` | Number of recent messages to fetch from the channel |

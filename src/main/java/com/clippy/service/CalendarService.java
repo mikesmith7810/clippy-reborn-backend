@@ -22,9 +22,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStreamReader;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -75,12 +77,17 @@ public class CalendarService {
                     .setSingleEvents(true)
                     .execute();
 
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", Locale.ENGLISH);
+            String header = dateRange.start().equals(dateRange.end())
+                    ? "Events for " + dateRange.start().format(fmt) + ":"
+                    : "Events from " + dateRange.start().format(fmt) + " to " + dateRange.end().format(fmt) + ":";
+
             List<Event> items = events.getItems();
             if (items == null || items.isEmpty()) {
-                return "No events found for the requested period.";
+                return header + "\nNo events found.";
             }
 
-            return items.stream()
+            String eventList = items.stream()
                     .map(event -> {
                         String start = event.getStart().getDateTime() != null
                                 ? event.getStart().getDateTime().toString()
@@ -88,6 +95,8 @@ public class CalendarService {
                         return "- " + event.getSummary() + " at " + start;
                     })
                     .collect(Collectors.joining("\n"));
+
+            return header + "\n" + eventList;
 
         } catch (Exception e) {
             log.error("Failed to fetch calendar events", e);
