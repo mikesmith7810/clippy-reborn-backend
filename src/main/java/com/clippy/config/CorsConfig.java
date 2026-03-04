@@ -14,9 +14,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins(
-                                "http://localhost:5173", // Vite dev server
-                                "file://"               // packaged Electron app
+                        .allowedOriginPatterns(
+                                "http://localhost:*"    // Vite dev server (any port)
                         )
                         .allowedMethods("GET", "POST", "OPTIONS")
                         .allowedHeaders("*");
