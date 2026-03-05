@@ -14,11 +14,14 @@ Spring Boot backend for the Clippy desktop assistant. Receives chat messages fro
 
 ### 1. Ollama
 
-Install Ollama from [ollama.com](https://ollama.com), then pull the model:
+Install Ollama from [ollama.com](https://ollama.com), then pull the model and start the server:
 
 ```bash
-ollama pull llama3.2
+ollama pull llama3.2   # download the model (one-time)
+ollama serve           # start the Ollama API server on http://localhost:11434
 ```
+
+> **Tip:** On macOS, if you launched Ollama via the menu bar app it is already serving — you don't need to run `ollama serve` separately. You can check with `curl http://localhost:11434` — if it returns `Ollama is running` you're good to go.
 
 ### 2. Google Calendar credentials
 
