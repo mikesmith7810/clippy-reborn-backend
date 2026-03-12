@@ -7,16 +7,31 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "google.calendar")
 public class GoogleCalendarConfig {
 
-    private String credentialsFile;
-    private String tokensDir;
-    private String user;
+  private String credentialsFile;
+  private String tokensDir;
+  private String user;
 
-    public String getCredentialsFile() { return credentialsFile; }
-    public void setCredentialsFile(String credentialsFile) { this.credentialsFile = credentialsFile; }
+  public String getCredentialsFile() {
+    return credentialsFile;
+  }
 
-    public String getTokensDir() { return tokensDir; }
-    public void setTokensDir(String tokensDir) { this.tokensDir = tokensDir; }
+  public void setCredentialsFile(String credentialsFile) {
+    this.credentialsFile = credentialsFile;
+  }
 
-    public String getUser() { return user; }
-    public void setUser(String user) { this.user = user; }
+  public String getTokensDir() {
+    return tokensDir;
+  }
+
+  public void setTokensDir(String tokensDir) {
+    this.tokensDir = tokensDir;
+  }
+
+  public String getUser() {
+    return user;
+  }
+
+  public void setUser(String user) {
+    this.user = user;
+  }
 }

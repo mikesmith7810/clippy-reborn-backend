@@ -14,12 +14,6 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
-
 import java.io.InputStreamReader;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -28,79 +22,100 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CalendarService {
 
-    private static final Logger log = LoggerFactory.getLogger(CalendarService.class);
-    private static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
+  private static final Logger log = LoggerFactory.getLogger(CalendarService.class);
+  private static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+  private static final List<String> SCOPES =
+      Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
 
-    @Value("${google.calendar.credentials-file}")
-    private Resource credentialsFile;
+  @Value("${google.calendar.credentials-file}")
+  private Resource credentialsFile;
 
-    @Value("${google.calendar.tokens-dir}")
-    private String tokensDir;
+  @Value("${google.calendar.tokens-dir}")
+  private String tokensDir;
 
-    @Value("${google.calendar.user}")
-    private String user;
+  @Value("${google.calendar.user}")
+  private String user;
 
-    public String getEvents(DateRange dateRange) {
-        try {
-            NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
-            GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-                    JSON_FACTORY, new InputStreamReader(credentialsFile.getInputStream()));
+  public String getEvents(DateRange dateRange) {
+    try {
+      NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
+      GoogleClientSecrets clientSecrets =
+          GoogleClientSecrets.load(
+              JSON_FACTORY, new InputStreamReader(credentialsFile.getInputStream()));
 
-            GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                    transport, JSON_FACTORY, clientSecrets, SCOPES)
-                    .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(tokensDir)))
-                    .setAccessType("offline")
-                    .build();
+      GoogleAuthorizationCodeFlow flow =
+          new GoogleAuthorizationCodeFlow.Builder(transport, JSON_FACTORY, clientSecrets, SCOPES)
+              .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(tokensDir)))
+              .setAccessType("offline")
+              .build();
 
-            Credential credential = new AuthorizationCodeInstalledApp(
-                    flow, new LocalServerReceiver()).authorize(user);
+      Credential credential =
+          new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize(user);
 
-            Calendar service = new Calendar.Builder(transport, JSON_FACTORY, credential)
-                    .setApplicationName("Clippy")
-                    .build();
+      Calendar service =
+          new Calendar.Builder(transport, JSON_FACTORY, credential)
+              .setApplicationName("Clippy")
+              .build();
 
-            ZoneId zone = ZoneId.systemDefault();
-            com.google.api.client.util.DateTime timeMin = new com.google.api.client.util.DateTime(
-                    Date.from(dateRange.start().atStartOfDay(zone).toInstant()));
-            com.google.api.client.util.DateTime timeMax = new com.google.api.client.util.DateTime(
-                    Date.from(dateRange.end().plusDays(1).atStartOfDay(zone).toInstant()));
+      ZoneId zone = ZoneId.systemDefault();
+      com.google.api.client.util.DateTime timeMin =
+          new com.google.api.client.util.DateTime(
+              Date.from(dateRange.start().atStartOfDay(zone).toInstant()));
+      com.google.api.client.util.DateTime timeMax =
+          new com.google.api.client.util.DateTime(
+              Date.from(dateRange.end().plusDays(1).atStartOfDay(zone).toInstant()));
 
-            Events events = service.events().list("primary")
-                    .setTimeMin(timeMin)
-                    .setTimeMax(timeMax)
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
+      Events events =
+          service
+              .events()
+              .list("primary")
+              .setTimeMin(timeMin)
+              .setTimeMax(timeMax)
+              .setOrderBy("startTime")
+              .setSingleEvents(true)
+              .execute();
 
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", Locale.ENGLISH);
-            String header = dateRange.start().equals(dateRange.end())
-                    ? "Events for " + dateRange.start().format(fmt) + ":"
-                    : "Events from " + dateRange.start().format(fmt) + " to " + dateRange.end().format(fmt) + ":";
+      DateTimeFormatter fmt = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", Locale.ENGLISH);
+      String header =
+          dateRange.start().equals(dateRange.end())
+              ? "Events for " + dateRange.start().format(fmt) + ":"
+              : "Events from "
+                  + dateRange.start().format(fmt)
+                  + " to "
+                  + dateRange.end().format(fmt)
+                  + ":";
 
-            List<Event> items = events.getItems();
-            if (items == null || items.isEmpty()) {
-                return header + "\nNo events found.";
-            }
+      List<Event> items = events.getItems();
+      if (items == null || items.isEmpty()) {
+        return header + "\nNo events found.";
+      }
 
-            String eventList = items.stream()
-                    .map(event -> {
-                        String start = event.getStart().getDateTime() != null
-                                ? event.getStart().getDateTime().toString()
-                                : event.getStart().getDate().toString();
-                        return "- " + event.getSummary() + " at " + start;
-                    })
-                    .collect(Collectors.joining("\n"));
+      String eventList =
+          items.stream()
+              .map(
+                  event -> {
+                    String start =
+                        event.getStart().getDateTime() != null
+                            ? event.getStart().getDateTime().toString()
+                            : event.getStart().getDate().toString();
+                    return "- " + event.getSummary() + " at " + start;
+                  })
+              .collect(Collectors.joining("\n"));
 
-            return header + "\n" + eventList;
+      return header + "\n" + eventList;
 
-        } catch (Exception e) {
-            log.error("Failed to fetch calendar events", e);
-            return "Could not retrieve calendar events.";
-        }
+    } catch (Exception e) {
+      log.error("Failed to fetch calendar events", e);
+      return "Could not retrieve calendar events.";
     }
+  }
 }
