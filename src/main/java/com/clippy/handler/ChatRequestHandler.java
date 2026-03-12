@@ -4,7 +4,7 @@ import com.clippy.model.MessageType;
 
 public interface ChatRequestHandler {
 
-    MessageType getType();
+  MessageType getType();
 
-    String handle(String message);
+  String handle(String message);
 }
