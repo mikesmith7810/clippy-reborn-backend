@@ -1,18 +1,20 @@
 package com.clippy.service;
 
-import com.clippy.model.DateRange;
-import com.clippy.model.MessageType;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.stereotype.Service;
+
+import com.clippy.model.DateRange;
+import com.clippy.model.MessageType;
 
 @Service
 public class ChatService {
@@ -25,7 +27,9 @@ public class ChatService {
     this.chatModel = chatModel;
   }
 
-  public MessageType classify(String userMessage) {
+  public MessageType classify(String message) {
+
+    message = message.toLowerCase();
     String template =
         """
         Classify the following user message into exactly one of these categories:
@@ -35,11 +39,11 @@ public class ChatService {
 
         Respond with only the category name and nothing else.
 
-        Message: {userMessage}
+        Message: {message}
         """;
 
     PromptTemplate promptTemplate = new PromptTemplate(template);
-    Prompt prompt = promptTemplate.create(Map.of("userMessage", userMessage));
+    Prompt prompt = promptTemplate.create(Map.of("message", message));
     String response = chatModel.call(prompt).getResult().getOutput().getText().trim().toUpperCase();
 
     try {
