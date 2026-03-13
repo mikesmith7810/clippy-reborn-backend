@@ -1,0 +1,20 @@
+
+  ⭐ Story  🚧 To Do  ⌛ Fri, 13 Mar 26  👷 Unassigned  🔑️ KAN-6  💭 0 comments  🧵 0 linked                         
+                                                                                                                      
+  # Create a copilot instructions file                                                                                
+                                                                                                                      
+  ⏱️  Fri, 13 Mar 26  🔎 Mike Smith  🚀 Medium  📦 None  🏷️  None  👀 0 watchers                                      
+                                                                                                                      
+  ------------------------ Description ------------------------                                                       
+                                                                                                                      
+  We need a general copilot instructions file.                                                                        
+                                                                                                                      
+  Acceptance                                                                                                          
+                                                                                                                      
+  • Use google coding format                                                                                          
+  • Use constructor injection for spring                                                                              
+  • variable names should fully reflect the type - eg a ChatService object would be chatService                       
+  • the varnames should be camel case                                                                                 
+                                                                                                                      
+[38;5;242m[0m[38;5;242m[0m  [38;5;242mView this issue on Jira: https://mikesmith7810.atlassian.net/browse/KAN-6[m                                           [0m
+
