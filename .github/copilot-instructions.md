@@ -20,6 +20,10 @@
 - Test: `./gradlew test`
 - Run local profile: `./gradlew bootRun --args='--spring.profiles.active=local'`
 
+## Branches
+- Any new feature branches are prefixed with feature - eg /feature/KAN-1_ImplementNewButton
+- Any new bug branches are prefixed with bug - eg /bug/KAN-1_FixAnnoyingNull
+
 ## References
 - See `README.md` for setup and environment prerequisites.
 - See `CLAUDE.md` for architecture and API contract context.
