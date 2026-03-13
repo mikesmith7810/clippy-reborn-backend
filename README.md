@@ -1,5 +1,11 @@
 # clippy-reborn-backend
 
+> 📎 *"It looks like you're trying to build a personal AI assistant. Can I help?"*
+
+Meet **Clippy Reborn** — the spiritual successor to everyone's favourite animated paperclip. Instead of popping up uninvited while you write a letter, this version actually listens to your questions, sneaks a look at your Google Calendar, scrolls through your Slack, and enlists a locally running AI to respond on its behalf. All without shipping your data off to some mysterious cloud. The '90s would be proud.
+
+---
+
 > **Note:** This project was built as a test of vibe coding using Claude Code — the whole thing was written with AI assistance, with minimal manual code changes.
 
 Spring Boot backend for the Clippy desktop assistant. Receives chat messages from the Electron frontend, enriches them with today's Google Calendar events, and uses a locally running Ollama LLM to generate responses.
