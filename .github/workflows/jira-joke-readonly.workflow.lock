@@ -1,0 +1,7 @@
+version: 1
+workflow: .github/workflows/jira-joke-readonly.workflow.md
+integrity:
+  on: [pull-request:merged]
+  permissions: [contents:read, issues:read, pull-requests:read]
+  tools: [github, jira]
+  safe-outputs: [jira-comment]
