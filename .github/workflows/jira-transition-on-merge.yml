@@ -1,0 +1,71 @@
+name: Jira Transition On Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  move-jira-ticket-to-done:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    env:
+      JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+      JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+      JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+      PR_TITLE: ${{ github.event.pull_request.title }}
+      PR_BODY: ${{ github.event.pull_request.body }}
+      PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+    steps:
+      - name: Resolve Jira ticket key
+        id: ticket
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_TEXT="$PR_TITLE $PR_BRANCH $PR_BODY"
+          if [[ "$SOURCE_TEXT" =~ ([A-Z][A-Z0-9]+-[0-9]+) ]]; then
+            TICKET_KEY="${BASH_REMATCH[1]}"
+            echo "ticket_key=$TICKET_KEY" >> "$GITHUB_OUTPUT"
+          else
+            echo "No Jira key found in PR title, branch, or body."
+            echo "ticket_key=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate secrets
+        if: steps.ticket.outputs.ticket_key != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ -n "$JIRA_BASE_URL" ]] || { echo "Missing secret: JIRA_BASE_URL"; exit 1; }
+          [[ -n "$JIRA_USER_EMAIL" ]] || { echo "Missing secret: JIRA_USER_EMAIL"; exit 1; }
+          [[ -n "$JIRA_API_TOKEN" ]] || { echo "Missing secret: JIRA_API_TOKEN"; exit 1; }
+
+      - name: Transition Jira ticket to Done
+        if: steps.ticket.outputs.ticket_key != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          TICKET_KEY="${{ steps.ticket.outputs.ticket_key }}"
+          BASE_URL="${JIRA_BASE_URL%/}"
+
+          TRANSITIONS_JSON=$(curl -sS --fail \
+            -u "$JIRA_USER_EMAIL:$JIRA_API_TOKEN" \
+            -H "Accept: application/json" \
+            "$BASE_URL/rest/api/3/issue/$TICKET_KEY/transitions")
+
+          TRANSITION_ID=$(echo "$TRANSITIONS_JSON" | jq -r '.transitions[] | select(.to.name | ascii_downcase == "done") | .id' | head -n 1)
+
+          if [[ -z "$TRANSITION_ID" || "$TRANSITION_ID" == "null" ]]; then
+            echo "No 'Done' transition available for $TICKET_KEY"
+            echo "$TRANSITIONS_JSON"
+            exit 1
+          fi
+
+          curl -sS --fail \
+            -u "$JIRA_USER_EMAIL:$JIRA_API_TOKEN" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            -X POST \
+            "$BASE_URL/rest/api/3/issue/$TICKET_KEY/transitions" \
+            --data "{\"transition\":{\"id\":\"$TRANSITION_ID\"}}"
+
+          echo "Moved $TICKET_KEY to Done"
