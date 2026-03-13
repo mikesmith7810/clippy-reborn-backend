@@ -23,6 +23,17 @@ We use JIRA as the source for our tasks, and we have a workflow that includes th
 - Tidy up the implementation by validating tests, coverage, and documentation updates. (Prompt: /tidy-up)
 - Feedback and iterate on the implementation, skills and instructions based on the outcome. (Prompt: /feedback)
 
+For bug tickets, use the dedicated bug workflow:
+
+- Run end-to-end bug workflow orchestration. (Prompt: /bug-workflow)
+- Find active bug tickets and pick one to work on. (Prompt: /bug-find)
+- Fetch bug ticket details into local ticket artifacts. (Prompt: /bug-fetch {ticket-key})
+- Reproduce the bug against the running service and collect evidence. (Prompt: /bug-reproduce {ticket-key})
+- Propose a fix and pause for explicit approval before edits. (Prompt: /bug-propose-fix {ticket-key})
+- Implement the approved fix with tests and validation. (Prompt: /bug-implement-fix {ticket-key})
+- Create branch, commit, push, and open a PR. (Prompt: /bug-open-pr {ticket-key})
+- Link PR back to Jira and move ticket to review state. (Prompt: /bug-link-pr {ticket-key} {pr-url})
+
 Outside the implementation steps, you can also assist with general questions, provide guidance on best practices, and help troubleshoot any issues that arise during the workflow.
 
 - Suggest the `project-recap` prompt to generate a visual recap of the project when needed. (Prompt: /project-recap {time window})
