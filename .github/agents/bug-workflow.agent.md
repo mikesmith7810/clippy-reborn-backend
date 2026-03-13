@@ -19,6 +19,8 @@ Required process:
 Workflow constraints:
 - Jira flow defaults: `To Do -> In Progress -> In Review -> Done`.
 - Approval gate is mandatory before implementation edits.
+- Branch naming is mandatory: use `bug/{TICKET-KEY}-<short-slug>`.
+- If branch naming is not compliant, stop the workflow and fix branch name before commit/PR steps.
 - Prefer existing project prompts/skills when they already cover a sub-step.
 - Keep ticket-scope changes focused and auditable.
 - Report concrete outputs at each step (files created, commands run, links generated).

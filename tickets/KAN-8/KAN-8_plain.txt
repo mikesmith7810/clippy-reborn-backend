@@ -1,0 +1,24 @@
+
+  🐞 Bug  🚧 In Progress  ⌛ Fri, 13 Mar 26  👷 Unassigned  🔑️ KAN-8  💭 0 comments  🧵 0 linked                     
+                                                                                                                      
+  # Internal Server error when message null                                                                           
+                                                                                                                      
+  ⏱️  Fri, 13 Mar 26  🔎 Mike Smith  🚀 Medium  📦 None  🏷️  None  👀 You are watching                                
+                                                                                                                      
+  ------------------------ Description ------------------------                                                       
+                                                                                                                      
+  if the message in the payload is null, then this causes the service to return an internal server error to the       
+  client.                                                                                                             
+                                                                                                                      
+  Reproducible with the following request -                                                                           
+                                                                                                                      
+  http://localhost:8080/api/chat                                                                                      
+                                                                                                                      
+  body - {"message": null}                                                                                            
+                                                                                                                      
+  AC -                                                                                                                
+                                                                                                                      
+  Service should handle null value and return an appropriate message in response saying that message cannot be null   
+                                                                                                                      
+[38;5;242m[0m[38;5;242m[0m  [38;5;242mView this issue on Jira: https://mikesmith7810.atlassian.net/browse/KAN-8[m                                           [0m
+
