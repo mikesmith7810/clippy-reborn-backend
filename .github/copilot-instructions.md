@@ -1,7 +1,7 @@
 # Project Guidelines
 
 ## Code Style
-- Follow Google Java Style for Java code changes.
+- Follow Google Java Style for all Java code changes.
 - Use descriptive lower camelCase variable names that reflect role/type intent.
   - Preferred: `chatService`, `calendarService`, `messageType`
   - Avoid unclear abbreviations like `svc`, `msg`, `tmpObj`
