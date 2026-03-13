@@ -136,3 +136,5 @@ All config lives in `src/main/resources/application.yml`. Key settings:
 | `google.calendar.user` | `mike` | Identifier for the stored token |
 | `slack.bot-token` | — | Bot token from Slack — set in `application-local.yml` |
 | `slack.message-limit` | `20` | Number of recent messages to fetch from the channel |
+
+Test update for KAN-12: README line added to validate PR-to-Jira linking flow.
