@@ -1,0 +1,13 @@
+
+  ⭐ Story  🚧 To Do  ⌛ Thu, 12 Mar 26  👷 Unassigned  🔑️ KAN-4  💭 0 comments  🧵 0 linked                         
+                                                                                                                      
+  # Reformat Code                                                                                                     
+                                                                                                                      
+  ⏱️  Thu, 12 Mar 26  🔎 Mike Smith  🚀 Medium  📦 None  🏷️  None  👀 0 watchers                                      
+                                                                                                                      
+  ------------------------ Description ------------------------                                                       
+                                                                                                                      
+  All the java code needs to be reformattted to Google Code standards                                                 
+                                                                                                                      
+[38;5;242m[0m[38;5;242m[0m  [38;5;242mView this issue on Jira: https://mikesmith7810.atlassian.net/browse/KAN-4[m                                           [0m
+
